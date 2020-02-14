@@ -1,13 +1,152 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.App {
+  text-align: center;
+  background-color: #dddddd;
+  border: 1px solid black;
+  /* offset-x | offset-y | blur-radius | color */
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+.App-logo {
+  /* animation: App-logo-spin infinite 20s linear; */
+  height: 160px;
+}
+
+/* @keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */
+
+.App-header {
+  /* height: 150px; */
+  padding: 20px;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+body {
+  margin: 0;
+  padding: 10px;
+  font-family: sans-serif;
+  background-image: url(/img/circuit-tree-fade.jpg);
+  background-position: top;
+}
+
+.correct-answer {
+  border: solid green 2px;
+  background-color: #eeeeff;
+  font-size: 200%;
+}
+
+.praise {
+  font-family: "Times";
+  font-style: oblique;
+  font-size: 200%;
+}
+
+button.incorrect {
+  border: red dashed 2px;
+}
+
+.correct-answer .live-label {
+  display: none;
+}
+.correct-answer .live-answer {
+  border: none;
+  background-color: #eeeeff;
+  left: 0px;
+}
+
+button.correct {
+  border: green solid 3px;
+}
+
+button.pending {
+  border: orange solid 2px;
+}
+
+.response-count {
+  float: right;
+  font-style: oblique;
+}
+
+.game-title {
+  font-style: oblique;
+  float: left;
+}
+
+.live-answer {
+  background-color: #eeeeee;
+  border: 1px solid navy;
+  margin: 10px;
+  position: relative;
+  left: 15px;
+  font-size: 200%;
+}
+
+.live-label {
+  position: relative;
+  left: -20px;
+  font-weight: bold;
+}
+
+.row button,
+a {
+  width: 100%;
+  margin: 10px;
+}
+
+.answer-remote {
+  font-style: oblique;
+}
+
+.advance-button {
+  height: 70px;
+}
+
+code {
+  color: black;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+.results code {
+  color: black;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: medium;
+}
+
+.selected {
+  background-color: honeydew;
+}
+
+#question-start {
+  margin-top: 0px;
+  margin-left: 0px;
+}
+
+.results {
+  margin-bottom: 15px;
 }
