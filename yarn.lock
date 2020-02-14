@@ -9276,6 +9276,13 @@ polished@^3.3.1:
   dependencies:
     "@babel/runtime" "^7.6.3"
 
+polyrhythm@^0.9.9:
+  version "0.9.9"
+  resolved "https://registry.yarnpkg.com/polyrhythm/-/polyrhythm-0.9.9.tgz#ab743976f4d5ae7e08fb12c7f56e237e03a9b153"
+  integrity sha512-u0wkP6g1kqM8Nd6XlcAXOJ59Aw9l1Nr9PFP/UUrE68RdFrC5ZzY3IhvmZtXPDew48+4zNH1HTIf0I7f4x5M6bg==
+  dependencies:
+    rx-helper ">=2.1.5"
+
 popper.js@^1.14.4, popper.js@^1.14.7:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
@@ -11062,6 +11069,11 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   integrity sha1-6Eg5bwV9Ij8kOGkkYY4laUFh7Ec=
   dependencies:
     aproba "^1.1.1"
+
+rx-helper@>=2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/rx-helper/-/rx-helper-2.1.5.tgz#3d324b2c704d96636659f17d621db08ea2d207cf"
+  integrity sha512-FTzf+el8Q+/kyf7NZ++KGBAtMsXilrQwZmuCbk/2AYQuEsiLO0N1ce8e69+cpi7/3NnCLerzx5IHH2giGe3XYQ==
 
 rxjs@^6.4.0, rxjs@^6.5.3:
   version "6.5.4"
