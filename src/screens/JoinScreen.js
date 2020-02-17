@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { trigger } from 'polyrhythm';
+import { trigger, useListener } from 'polyrhythm';
+import { Notyf } from 'notyf';
+
+import 'notyf/notyf.min.css';
+const notyf = new Notyf();
 
 export const JoinScreen = ({ loggedInUser, authUrl, authStates }) => {
   const [user, setUser] = useState(loggedInUser);
@@ -16,6 +20,10 @@ export const JoinScreen = ({ loggedInUser, authUrl, authStates }) => {
     return () => sub && sub.unsubscribe();
   }, [authStates]);
 
+  useListener('auth/login', (_, { user }) => {
+    const msg = user ? `Logged in as ${user}` : 'You have been logged out.';
+    notyf.success(msg);
+  });
   return user ? (
     <LoggedInJoinScreen username={user} />
   ) : (
