@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
+  "repository": "https://github.com/deanius/trivia-crap",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -12,6 +13,8 @@
     "express": "^4.17.1",
     "morgan": "^1.9.1",
     "notyf": "^3.1.0",
+    "passport": "^0.4.1",
+    "passport-github": "^1.1.0",
     "polyrhythm": "^0.9.9",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -28,7 +31,9 @@
     "storybook": "start-storybook -p 8470 -s public",
     "build-storybook": "build-storybook -s public",
     "server": "nodemon server.js",
-    "fire-it-up": "concurrently 'react-scripts start' 'npm run server'",
+    "dev": "concurrently 'react-scripts start' 'npm run server' 'npm run storybook'",
+    "github:settings": "open https://github.com/settings/applications/221258",
+    "heroku:settings": "open https://dashboard.heroku.com/apps/g2-trivia",
     "heroku-postbuild": "npm install && npm run build"
   },
   "proxy": "http://localhost:3001/",
