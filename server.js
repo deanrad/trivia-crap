@@ -1,14 +1,17 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const path = require('path');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import path from 'path';
+import passport from 'passport';
+import { Strategy as GitHubStrategy } from 'passport-github2';
+import _http from 'http';
+import _io from 'socket.io';
+
 const PORT = process.env.PORT || 3001;
 const app = express();
-const http = require('http').Server(app);
-
-const passport = require('passport');
-const GitHubStrategy = require('passport-github2').Strategy;
+const http = _http.Server(app);
+const io = _io.listen(http);
 
 // From the settings page: https://github.com/settings/applications/614725
 const GITHUB_CLIENT_ID = '37dabf371fa04f10829f';
@@ -32,7 +35,16 @@ app.get('/server/ping', (req, res) => {
 app.use(express.static(path.join(__dirname, 'build')));
 
 /*** Priority 3: TODO WebSocket socket.io ******/
-
+io.on('connection', client => {
+  console.log('Got a client connection!');
+  client.on('helo', () => {
+    console.log(`Helo client ${client.id}`);
+  });
+  client.on('event', () => {});
+  client.on('disconnect', () => {
+    console.log('Client signed off');
+  });
+});
 /*** Priority 4: Set up passport OAuth ******/
 
 // Use the GitHubStrategy within Passport.
@@ -51,7 +63,7 @@ passport.use(
       clientSecret: GITHUB_CLIENT_SECRET,
       callbackURL
     },
-    function(accessToken, refreshToken, profile, done) {
+    (accessToken, refreshToken, profile, done) => {
       // To keep the example simple, the user's GitHub profile is returned to
       // represent the logged-in user.  In a typical application, you would want
       // to associate the GitHub account with a user record in your database,
@@ -63,18 +75,18 @@ passport.use(
   )
 );
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
 app.get(
   '/auth/github',
   passport.authenticate('github', { scope: ['read:user'] }),
-  function(req, res) {
+  (req, res) => {
     // The request will be redirected to GitHub for authentication, so this
     // function will not be called.
   }
@@ -83,7 +95,7 @@ app.get(
 app.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
-  function(req, res) {
+  (req, res) => {
     res.cookie('g2-trivia-user', req.user.username);
     // TODO upsert record with username, photo, etc..
     res.redirect(
@@ -97,6 +109,6 @@ app.get('*', (req, res) => {
 });
 
 // Finally run it all
-http.listen(PORT, function() {
+http.listen(PORT, () => {
   console.log(`🌎 ==> Server now on port ${PORT}!`);
 });

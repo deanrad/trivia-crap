@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^7.1.2",
     "concurrently": "^5.1.0",
     "cookie-parser": "^1.4.4",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "morgan": "^1.9.1",
     "notyf": "^3.1.0",
@@ -20,6 +21,8 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.1",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "universal-cookie": "^4.0.3"
   },
   "scripts": {
@@ -31,8 +34,9 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 8470 -s public",
     "build-storybook": "build-storybook -s public",
-    "server": "nodemon server.js",
+    "server": "nodemon -r esm server.js",
     "dev": "concurrently 'react-scripts start' 'npm run server' 'npm run storybook'",
+    "deploy": "git push -f g2-trivia master && open http://g2-trivia.herokuapp.com/; heroku logs -t",
     "github:settings": "open https://github.com/settings/applications/221258",
     "heroku:settings": "open https://dashboard.heroku.com/apps/g2-trivia",
     "heroku-postbuild": "npm install && npm run build"

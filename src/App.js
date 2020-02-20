@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
 import './App.css';
+import { JoinScreen } from './screens/JoinScreen';
+import { simulatedGithubAuth } from './auth/fixtures';
+import { sendToGithubListener, authUrl } from './auth';
+import { spy } from 'polyrhythm';
+
+import io from 'socket.io-client';
+
+const url =
+  process.env.NODE_ENV === 'production'
+    ? document.location.href.replace(/\/\w+$/, '') // get rid of path
+    : 'http://localhost:3001';
+
+const authListener =
+  process.env.NODE_ENV === 'production'
+    ? sendToGithubListener
+    : simulatedGithubAuth;
 
 function App() {
+  useEffect(() => {
+    spy(({ type, payload }) => console.log(type, payload));
+    const socket = io(url);
+
+    socket.on('connect', function() {
+      socket.emit('helo', 'helo');
+    });
+    window.socket = socket;
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <JoinScreen authListener={authListener} authUrl={authUrl} />
     </div>
   );
 }
