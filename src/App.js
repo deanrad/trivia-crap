@@ -3,7 +3,7 @@ import './App.css';
 import { JoinScreen } from './screens/JoinScreen';
 import { simulatedGithubAuth } from './auth/fixtures';
 import { sendToGithubListener, authUrl } from './auth';
-import { spy } from 'polyrhythm';
+import { spy, on, trigger } from 'polyrhythm';
 
 import io from 'socket.io-client';
 
@@ -25,7 +25,14 @@ function App() {
     socket.on('connect', function() {
       socket.emit('helo', 'helo');
     });
+
+    const socketEvents = ['auth/login'];
+    on(socketEvents, ({ type, payload }) => {
+      socket.emit('event', { type, payload });
+    });
+
     window.socket = socket;
+    window.trigger = trigger;
   }, []);
   return (
     <div className="App">

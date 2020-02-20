@@ -7,6 +7,7 @@ import passport from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import _http from 'http';
 import _io from 'socket.io';
+import { handleSocketConnection } from './socketHandler';
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -35,16 +36,7 @@ app.get('/server/ping', (req, res) => {
 app.use(express.static(path.join(__dirname, 'build')));
 
 /*** Priority 3: TODO WebSocket socket.io ******/
-io.on('connection', client => {
-  console.log('Got a client connection!');
-  client.on('helo', () => {
-    console.log(`Helo client ${client.id}`);
-  });
-  client.on('event', () => {});
-  client.on('disconnect', () => {
-    console.log('Client signed off');
-  });
-});
+io.on('connection', handleSocketConnection);
 /*** Priority 4: Set up passport OAuth ******/
 
 // Use the GitHubStrategy within Passport.
