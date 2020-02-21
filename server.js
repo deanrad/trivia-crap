@@ -8,6 +8,7 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 import _http from 'http';
 import _io from 'socket.io';
 import { handleSocketConnection } from './socketHandler';
+import { validRoutes } from './src/routes';
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -34,6 +35,11 @@ app.get('/server/ping', (req, res) => {
 // In dev, Webpack dev server does this; in prod, serve from static assets
 // (See heroku-postbuild)
 app.use(express.static(path.join(__dirname, 'build')));
+validRoutes.forEach(route => {
+  app.get(route, (req, res) => {
+    res.sendFile(path.join(__dirname, 'build/index.html'));
+  });
+});
 
 /*** Priority 3: TODO WebSocket socket.io ******/
 io.on('connection', handleSocketConnection);

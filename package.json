@@ -28,7 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "npm run test:int:local",
     "test:int:local": "scripts/test-int-local.sh",
     "test:int:prod": "scripts/test-int-prod.sh",
     "eject": "react-scripts eject",

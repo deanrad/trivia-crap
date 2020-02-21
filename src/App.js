@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { JoinScreen } from './screens/JoinScreen';
+import { LiveScreen } from './screens/LiveScreen';
+import { RemoteScreen } from './screens/RemoteScreen';
 import { simulatedGithubAuth } from './auth/fixtures';
 import { sendToGithubListener, authUrl } from './auth';
+import { setInitialRoute, Home, Live, Remote } from './routes';
 import { spy, on, trigger } from 'polyrhythm';
 
 import io from 'socket.io-client';
@@ -31,12 +34,21 @@ function App() {
       socket.emit('event', { type, payload });
     });
 
+    storeRoute(setInitialRoute(window));
+
     window.socket = socket;
     window.trigger = trigger;
   }, []);
+
+  const [route, storeRoute] = useState(Home);
+
   return (
     <div className="App">
-      <JoinScreen authListener={authListener} authUrl={authUrl} />
+      {route === Home && (
+        <JoinScreen authListener={authListener} authUrl={authUrl} />
+      )}
+      {route === Live && <LiveScreen />}
+      {route === Remote && <RemoteScreen />}
     </div>
   );
 }

@@ -5,6 +5,9 @@ curl -fs -H Accept:text/html -o /dev/null http://localhost:3000/index.html
 curl -fs -H Accept:text/html -o /dev/null http://localhost:3000/client
 # Server answers directly
 curl -fs -o /dev/null http://localhost:3001/server/ping
+curl -fs -o /dev/null http://localhost:3001/
+curl -fs -o /dev/null http://localhost:3001/live
+curl -fs -o /dev/null http://localhost:3001/remote
 # and 404s undefined routes
 curl -fs -o /dev/null http://localhost:3001/not_found || echo "404 ok"
 # Webpack proxies to server
