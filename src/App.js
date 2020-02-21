@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './App.css';
 import { JoinScreen } from './screens/JoinScreen';
 import { LiveScreen } from './screens/LiveScreen';
 import { RemoteScreen } from './screens/RemoteScreen';
 import { simulatedGithubAuth } from './auth/fixtures';
-import { sendToGithubListener, authUrl } from './auth';
+import { sendToGithubListener, authUrl, authStates } from './auth';
 import { setInitialRoute, Home, Live, Remote } from './routes';
-import { spy, on, trigger } from 'polyrhythm';
+import { storeModel } from './store/index';
+import { spy, on, trigger, useEffectAtMount, useListener } from 'polyrhythm';
+import { useLocalStore, useObserver } from 'mobx-react-lite';
 
 import io from 'socket.io-client';
 
@@ -21,7 +23,9 @@ const authListener =
     : simulatedGithubAuth;
 
 function App() {
-  useEffect(() => {
+  const store = useLocalStore(storeModel);
+
+  useEffectAtMount(() => {
     spy(({ type, payload }) => console.log(type, payload));
     const socket = io(url);
 
@@ -34,23 +38,37 @@ function App() {
       socket.emit('event', { type, payload });
     });
 
-    storeRoute(setInitialRoute(window));
+    store.setRoute(setInitialRoute(window));
 
-    window.socket = socket;
-    window.trigger = trigger;
-  }, []);
+    Object.assign(window, { socket, trigger, store });
+  });
 
-  const [route, storeRoute] = useState(Home);
+  useEffectAtMount(() => {
+    const sub =
+      authStates &&
+      authStates.subscribe(user => {
+        trigger('auth/login', { user });
+      });
+    return () => sub && sub.unsubscribe();
+  });
 
-  return (
+  useListener('auth/login', ({ payload: { user } }) => {
+    store.setUsername(user);
+  });
+
+  return useObserver(() => (
     <div className="App">
-      {route === Home && (
-        <JoinScreen authListener={authListener} authUrl={authUrl} />
+      {store.route === Home && (
+        <JoinScreen
+          authListener={authListener}
+          authUrl={authUrl}
+          loggedInUser={store.username}
+        />
       )}
-      {route === Live && <LiveScreen />}
-      {route === Remote && <RemoteScreen />}
+      {store.route === Live && <LiveScreen />}
+      {store.route === Remote && <RemoteScreen />}
     </div>
-  );
+  ));
 }
 
 export default App;

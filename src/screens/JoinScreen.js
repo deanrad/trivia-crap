@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { trigger, useListener } from 'polyrhythm';
 import { Notyf } from 'notyf';
 
@@ -9,22 +9,9 @@ const noopListener = () => ['auth/start', () => console.log('auth/start')];
 export const JoinScreen = ({
   loggedInUser,
   authUrl,
-  authListener = noopListener,
-  authStates
+  authListener = noopListener
 }) => {
-  const [user, setUser] = useState(loggedInUser);
-
-  // Use the authStates Observable to trigger 'login/change' events
-  // as well as update our own state.
-  useEffect(() => {
-    const sub =
-      authStates &&
-      authStates.subscribe(user => {
-        setUser(user);
-        trigger('auth/login', { user });
-      });
-    return () => sub && sub.unsubscribe();
-  }, [authStates]);
+  const user = loggedInUser;
 
   // instantiate our listener
   useListener(...authListener(authUrl));

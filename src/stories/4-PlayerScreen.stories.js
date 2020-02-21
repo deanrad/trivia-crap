@@ -25,3 +25,4 @@ export const RevealedWrong = () => (
     question={Q.apiQuestion}
   />
 );
+export const NoQuestion = () => <PlayerScreen />;
