@@ -10,11 +10,11 @@ export default {
 export const Unanswered = () => <VoteButton choice="/api/tables/1" />;
 
 export const MyAnswer = () => (
-  <VoteButton choice="/api/tables/1" myChoice={'/api/tables/1'} />
+  <VoteButton choice="/api/tables/1" myAnswer={'/api/tables/1'} />
 );
 
 export const NonAnswer = () => (
-  <VoteButton choice="/api/tables/2" myChoice={'/api/tables/1'} />
+  <VoteButton choice="/api/tables/2" myAnswer={'/api/tables/1'} />
 );
 
 export const RevealedAndCorrect = () => (

@@ -1,11 +1,11 @@
 import React from 'react';
 import { trigger } from 'polyrhythm';
 
-export const VoteButton = ({ choice, myChoice, realAnswer, revealed }) => {
-  let displayClass = displayStyle({ choice, myChoice, realAnswer, revealed });
+export const VoteButton = ({ choice, myAnswer, realAnswer, revealed }) => {
+  let displayClass = displayStyle({ choice, myAnswer, realAnswer, revealed });
   return (
     <button
-      disabled={revealed || !!myChoice}
+      disabled={revealed || !!myAnswer}
       className={displayClass}
       key={choice}
       onClick={e => {
@@ -18,13 +18,13 @@ export const VoteButton = ({ choice, myChoice, realAnswer, revealed }) => {
   );
 };
 
-const displayStyle = ({ choice, myChoice, realAnswer, revealed }) => {
+const displayStyle = ({ choice, myAnswer, realAnswer, revealed }) => {
   // they havent answered - no class
-  if (!myChoice) return '';
+  if (!myAnswer) return '';
 
   // not their answer
-  if (myChoice !== choice) return '';
+  if (myAnswer !== choice) return '';
 
-  if (!revealed && myChoice === choice) return 'pending';
-  if (revealed) return myChoice === realAnswer ? 'correct' : 'incorrect';
+  if (!revealed && myAnswer === choice) return 'pending';
+  if (revealed) return myAnswer === realAnswer ? 'correct' : 'incorrect';
 };
