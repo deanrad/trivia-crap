@@ -4,10 +4,11 @@ import { JoinScreen } from './screens/JoinScreen';
 import { LiveScreen } from './screens/LiveScreen';
 import { RemoteScreen } from './screens/RemoteScreen';
 import { simulatedGithubAuth } from './auth/fixtures';
-import { sendToGithubListener, authUrl, authStates } from './auth';
+import { sendToGithubListener, authUrl, authCookieStates } from './auth';
 import { setInitialRoute, Home, Live, Remote } from './routes';
 import { storeModel } from './store/index';
-import { spy, on, trigger, useEffectAtMount, useListener } from 'polyrhythm';
+import { useEffectAtMount, agent as defaultAgent } from 'polyrhythm';
+import { useLocalAgent, useListener } from './useLocalAgent';
 import { useLocalStore, useObserver } from 'mobx-react-lite';
 
 import io from 'socket.io-client';
@@ -22,25 +23,33 @@ const authListener =
     ? sendToGithubListener
     : simulatedGithubAuth;
 
-function App() {
+function App({ agent = defaultAgent, authStates = authCookieStates }) {
   const store = useLocalStore(storeModel);
 
-  useEffectAtMount(() => {
-    spy(({ type, payload }) => console.log(type, payload));
-    const socket = io(url);
+  const { on, filter, spy, trigger, agentId } = useLocalAgent(agent);
 
-    socket.on('connect', function() {
-      socket.emit('helo', 'helo');
+  useEffectAtMount(() => {
+    const socket = io(url);
+    const socketEvents = ['auth/login'];
+
+    socket.on('connect', function(...args) {
+      console.info(...args);
     });
 
-    const socketEvents = ['auth/login'];
     on(socketEvents, ({ type, payload }) => {
       socket.emit('event', { type, payload });
     });
 
     store.setRoute(setInitialRoute(window));
 
-    Object.assign(window, { socket, trigger, store });
+    // Dont make the ones who fired trigger need to include this info
+    filter(/.*/, ({ payload }) => {
+      payload.agentId = agentId;
+    });
+
+    // Debugging
+    spy(({ type, payload }) => console.log(type, payload));
+    Object.assign(window, { socket, store });
   });
 
   useEffectAtMount(() => {

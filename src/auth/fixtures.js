@@ -13,3 +13,6 @@ export const simulatedGithubAuth = () => [
   () => after(0, () => trigger('auth/login', { user: 'Bram Moolenaar' })),
   { mode: 'mute' }
 ];
+
+export const player1CookieStates = after(500, 'Player 1');
+export const player2CookieStates = after(1000, 'Player 2');
