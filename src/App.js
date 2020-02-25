@@ -23,27 +23,28 @@ const authListener =
     ? sendToGithubListener
     : simulatedGithubAuth;
 
-function App({ agent = defaultAgent, authStates = authCookieStates }) {
+function App({  authStates = authCookieStates }) {
   const store = useLocalStore(storeModel);
 
-  const { on, filter, spy, trigger, agentId } = useLocalAgent(agent);
+  const { on, filter, spy, trigger, agentId } = useLocalAgent();
 
   useEffectAtMount(() => {
     const socket = io(url);
-    const socketEvents = ['auth/login'];
+    const publishedEvents = ['auth/login'];
 
+    socket.on('event', ({ type, payload }) => trigger(type, payload));
     socket.on('connect', function(...args) {
       console.info(...args);
     });
 
-    on(socketEvents, ({ type, payload }) => {
+    on(publishedEvents, ({ type, payload }) => {
       socket.emit('event', { type, payload });
     });
 
     store.setRoute(setInitialRoute(window));
 
     // Dont make the ones who fired trigger need to include this info
-    filter(/.*/, ({ payload }) => {
+    filter(publishedEvents, ({ payload }) => {
       payload.agentId = agentId;
     });
 

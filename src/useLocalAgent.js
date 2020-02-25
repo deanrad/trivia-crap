@@ -13,7 +13,6 @@ import { agent as defaultAgent } from 'polyrhythm';
 export const AgentContext = createContext(defaultAgent);
 
 export const useLocalAgent = () => {
-  // embed in context so anyone calling  is listening to this agent
   const agent = useContext(AgentContext) || defaultAgent;
   return {
     on: agent.on.bind(agent),
