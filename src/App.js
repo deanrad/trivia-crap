@@ -7,7 +7,7 @@ import { simulatedGithubAuth } from './auth/fixtures';
 import { sendToGithubListener, authUrl, authCookieStates } from './auth';
 import { setInitialRoute, Home, Live, Remote } from './routes';
 import { storeModel } from './store/index';
-import { useEffectAtMount, agent as defaultAgent } from 'polyrhythm';
+import { useEffectAtMount  } from 'polyrhythm';
 import { useLocalAgent, useListener } from './useLocalAgent';
 import { useLocalStore, useObserver } from 'mobx-react-lite';
 
@@ -23,36 +23,67 @@ const authListener =
     ? sendToGithubListener
     : simulatedGithubAuth;
 
-function App({  authStates = authCookieStates }) {
+function App({ authStates = authCookieStates, route }) {
+  const store = useStore({ authStates, route });
+  return useObserver(() => {
+    // read, in order to register a dependency
+    return (
+      <div className="App">
+        {store.route === Home && (
+          <JoinScreen
+            authListener={authListener}
+            authUrl={authUrl}
+            loggedInUser={store.username}
+          />
+        )}
+        {store.route === Live && <LiveScreen users={store.users} />}
+        {store.route === Remote && <RemoteScreen />}
+      </div>
+    );
+  });
+}
+
+function useStore({ authStates, route }) {
   const store = useLocalStore(storeModel);
 
   const { on, filter, spy, trigger, agentId } = useLocalAgent();
 
+  useAuth({ authStates, store, trigger });
+
   useEffectAtMount(() => {
     const socket = io(url);
-    const publishedEvents = ['auth/login'];
-
-    socket.on('event', ({ type, payload }) => trigger(type, payload));
     socket.on('connect', function(...args) {
       console.info(...args);
     });
 
+    // WS events become eventbus events
+    socket.on('event', ({ type, payload }) => {
+      trigger(type, payload);
+    });
+
+    // Certain eventbus events go outbound
+    const publishedEvents = ['auth/login'];
+    // Add in some fields on the fly for published events
+    filter(publishedEvents, ({ payload }) => {
+      payload.agentId = agentId;
+    });
     on(publishedEvents, ({ type, payload }) => {
       socket.emit('event', { type, payload });
     });
 
-    store.setRoute(setInitialRoute(window));
-
-    // Dont make the ones who fired trigger need to include this info
-    filter(publishedEvents, ({ payload }) => {
-      payload.agentId = agentId;
-    });
+    // We're initialized properly
+    store.setRoute(route || setInitialRoute(window));
 
     // Debugging
     spy(({ type, payload }) => console.log(type, payload));
     Object.assign(window, { socket, store });
   });
 
+  return store;
+}
+
+function useAuth({ authStates, store, trigger }) {
+  // Auth states become eventbus events under the key { user }
   useEffectAtMount(() => {
     const sub =
       authStates &&
@@ -62,23 +93,14 @@ function App({  authStates = authCookieStates }) {
     return () => sub && sub.unsubscribe();
   });
 
+  // When we get this event (and we trust it), record our username in the store
   useListener('auth/login', ({ payload: { user } }) => {
     store.setUsername(user);
   });
 
-  return useObserver(() => (
-    <div className="App">
-      {store.route === Home && (
-        <JoinScreen
-          authListener={authListener}
-          authUrl={authUrl}
-          loggedInUser={store.username}
-        />
-      )}
-      {store.route === Live && <LiveScreen />}
-      {store.route === Remote && <RemoteScreen />}
-    </div>
-  ));
+  // When we hear of another user joining, we add them to our store
+  useListener('state/users/add', ({ payload: { user } }) => {
+    store.users.push({ user });
+  });
 }
-
 export default App;

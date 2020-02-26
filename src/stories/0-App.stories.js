@@ -3,7 +3,6 @@ import App from '../App';
 import { player1CookieStates, player2CookieStates } from '../auth/fixtures';
 import { agent, Agent } from 'polyrhythm';
 import { AgentContext } from '../useLocalAgent';
-import { LiveScreen } from '../screens/LiveScreen';
 
 export default {
   title: 'G2 Trivia'
@@ -13,14 +12,24 @@ export default {
 const storybookAgent = agent;
 const player1Agent = new Agent({ agentId: 'P1' });
 const player2Agent = new Agent({ agentId: 'P2' });
+const liveAgent = new Agent({ agentId: 'L1' });
 
-player1Agent.on(true, ({ type, payload }) => storybookAgent.trigger(type, payload));
-player2Agent.on(true, ({ type, payload }) => storybookAgent.trigger(type, payload));
+player1Agent.on(true, ({ type, payload }) =>
+  storybookAgent.trigger('P1:' + type, payload)
+);
+player2Agent.on(true, ({ type, payload }) =>
+  storybookAgent.trigger('P2:' + type, payload)
+);
+liveAgent.on(true, ({ type, payload }) => {
+  storybookAgent.trigger('L1:' + type, payload);
+});
 
 export const Hello = () => <App />;
 export const MultiPlayer = () => (
   <>
-    <LiveScreen />
+    <AgentContext.Provider value={liveAgent}>
+      <App route="/live" />
+    </AgentContext.Provider>
     <AgentContext.Provider value={player1Agent}>
       <App authStates={player1CookieStates} />
     </AgentContext.Provider>

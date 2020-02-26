@@ -8,5 +8,6 @@ export const storeModel = () => ({
   username: null,
   setUsername(username) {
     this.username = username;
-  }
+  },
+  users: []
 });
