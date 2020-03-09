@@ -9,6 +9,7 @@ import _http from 'http';
 import _io from 'socket.io';
 import { handleSocketConnection } from './socketHandler';
 import { validRoutes } from './src/routes';
+import { trigger } from 'polyrhythm';
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -66,8 +67,12 @@ passport.use(
       // represent the logged-in user.  In a typical application, you would want
       // to associate the GitHub account with a user record in your database,
       // and return that user instead.
-      const { username, displayName } = profile;
-      console.log(`Logged in ${username} ${displayName}`);
+      const { username, displayName, photos } = profile;
+      trigger('github/login', {
+        user: username,
+        displayName,
+        photo: photos[0] && photos[0].value
+      });
       done(null, profile);
     }
   )

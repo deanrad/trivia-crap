@@ -18,4 +18,10 @@ export const LiveScreen = observer(({ users }) => {
   );
 });
 
-const User = ({ user, photo }) => <span>{user}</span>;
+const UserSize = 20;
+const User = ({ user, photo }) => (
+  <span>
+    <img alt={user} src={photo} height={UserSize} className="user-icon"></img>
+    {user}
+  </span>
+);

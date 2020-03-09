@@ -14,5 +14,5 @@ export const simulatedGithubAuth = () => [
   { mode: 'mute' }
 ];
 
-export const player1CookieStates = after(500, 'Player 1');
-export const player2CookieStates = after(1000, 'Player 2');
+export const player1CookieStates = after(500, 'Player1');
+export const player2CookieStates = after(1000, 'Player2');

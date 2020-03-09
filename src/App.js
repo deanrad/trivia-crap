@@ -3,11 +3,10 @@ import './App.css';
 import { JoinScreen } from './screens/JoinScreen';
 import { LiveScreen } from './screens/LiveScreen';
 import { RemoteScreen } from './screens/RemoteScreen';
-import { simulatedGithubAuth } from './auth/fixtures';
 import { sendToGithubListener, authUrl, authCookieStates } from './auth';
 import { setInitialRoute, Home, Live, Remote } from './routes';
 import { storeModel } from './store/index';
-import { useEffectAtMount  } from 'polyrhythm';
+import { useEffectAtMount } from 'polyrhythm';
 import { useLocalAgent, useListener } from './useLocalAgent';
 import { useLocalStore, useObserver } from 'mobx-react-lite';
 
@@ -21,7 +20,7 @@ const url =
 const authListener =
   process.env.NODE_ENV === 'production'
     ? sendToGithubListener
-    : simulatedGithubAuth;
+    : sendToGithubListener; // simulatedGithubAuth;
 
 function App({ authStates = authCookieStates, route }) {
   const store = useStore({ authStates, route });
@@ -99,8 +98,8 @@ function useAuth({ authStates, store, trigger }) {
   });
 
   // When we hear of another user joining, we add them to our store
-  useListener('state/users/add', ({ payload: { user } }) => {
-    store.users.push({ user });
+  useListener('state/users/add', ({ payload: { user, photo } }) => {
+    store.users.push({ user, photo });
   });
 }
 export default App;

@@ -11,12 +11,16 @@ const store = {
   users: []
 };
 
-filter('auth/login', (_, { user }) => {
-  store.users.push(user);
+filter('github/login', (_, { user, displayName, photo }) => {
+  store.users.push({ user, displayName, photo });
 });
-on(publishTriggers, (_, { user }) => {
-  outbound.next({ type: 'state/users/add', payload: { user } });
-});
+on(
+  publishTriggers,
+  (_, { user, photo = `https://github.com/identicons/${user}.png` }) => {
+    user &&
+      outbound.next({ type: 'state/users/add', payload: { user, photo } });
+  }
+);
 
 export const handleSocketConnection = client => {
   const clientId = client.id.substr(0, 6);
