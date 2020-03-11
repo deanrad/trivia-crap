@@ -7,7 +7,7 @@ import passport from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import _http from 'http';
 import _io from 'socket.io';
-import { handleSocketConnection } from './socketHandler';
+import { handleSocketConnection } from './server/socketHandler';
 import { validRoutes } from './src/routes';
 import { trigger } from 'polyrhythm';
 

@@ -4,6 +4,7 @@ import { JoinScreen } from './screens/JoinScreen';
 import { LiveScreen } from './screens/LiveScreen';
 import { RemoteScreen } from './screens/RemoteScreen';
 import { sendToGithubListener, authUrl, authCookieStates } from './auth';
+import { simulatedGithubAuth } from './auth/fixtures';
 import { setInitialRoute, Home, Live, Remote } from './routes';
 import { storeModel } from './store/index';
 import { useEffectAtMount } from 'polyrhythm';
@@ -20,7 +21,7 @@ const url =
 const authListener =
   process.env.NODE_ENV === 'production'
     ? sendToGithubListener
-    : sendToGithubListener; // simulatedGithubAuth;
+    : simulatedGithubAuth;
 
 function App({ authStates = authCookieStates, route }) {
   const store = useStore({ authStates, route });

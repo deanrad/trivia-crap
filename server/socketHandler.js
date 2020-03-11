@@ -1,26 +1,5 @@
-import { randomId, trigger, filter, on } from 'polyrhythm';
-import { Subject } from 'rxjs';
-
-const outbound = new Subject();
-
-// For these event types, a state update will be broadcast
-// after the event is reduced into the store
-const publishTriggers = ['auth/login'];
-
-const store = {
-  users: []
-};
-
-filter('github/login', (_, { user, displayName, photo }) => {
-  store.users.push({ user, displayName, photo });
-});
-on(
-  publishTriggers,
-  (_, { user, photo = `https://github.com/identicons/${user}.png` }) => {
-    user &&
-      outbound.next({ type: 'state/users/add', payload: { user, photo } });
-  }
-);
+import { randomId, trigger } from 'polyrhythm';
+import { outbound } from './consequences'
 
 export const handleSocketConnection = client => {
   const clientId = client.id.substr(0, 6);
