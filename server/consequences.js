@@ -30,6 +30,8 @@ on(
 on(
   persistTriggers,
   () => {
+    console.log('Saving game...');
+
     return persistGame(store);
   },
   { mode: 'serial' }
