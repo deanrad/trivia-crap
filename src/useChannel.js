@@ -33,5 +33,6 @@ export const useListener = (eventSpec, handler, options = {}) => {
     const subscription = agent.on(eventSpec, handler, config);
 
     return () => subscription.unsubscribe();
+    // eslint-disable-next-line
   }, deps);
 };

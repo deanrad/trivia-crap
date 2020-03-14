@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { randomId } from 'polyrhythm';
+
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/g2-trivia';
 
 const dbConnected = new Promise((resolve, reject) => {
@@ -21,11 +23,27 @@ const dbConnected = new Promise((resolve, reject) => {
 const schema = new mongoose.Schema({}, { strict: false });
 const Game = mongoose.model('Game', schema);
 
+const seedGame = {
+  gameId: 'g2-trivia',
+  randomId: randomId(),
+  users: {}
+};
+
+export const persistedGame = dbConnected.then(() =>
+  Game.findOne({ gameId: 'g2-trivia' }).then(game => {
+    if (game) {
+      return game._doc;
+    } else {
+      return Game.create(seedGame).then(() => seedGame);
+    }
+  })
+);
+
 export const persistGame = game => {
   return dbConnected.then(() => {
     Game.updateOne(
-      { id: 'g2-trivia' },
-      { id: 'g2-trivia', ...game },
+      { gameId: 'g2-trivia' },
+      { gameId: 'g2-trivia', ...game },
       { upsert: true }
     )
       .then(() => console.log('mongo: persisted game'))
