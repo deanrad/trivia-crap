@@ -100,7 +100,6 @@ app.get(
   passport.authenticate('github', { failureRedirect: '/login' }),
   (req, res) => {
     res.cookie('g2-trivia-user', req.user.username);
-    // TODO upsert record with username, photo, etc..
     res.redirect(
       process.env.NODE_ENV === 'production' ? '/' : '//localhost:3000/'
     );

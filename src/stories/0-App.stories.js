@@ -5,7 +5,7 @@ import { agent, Agent } from 'polyrhythm';
 import { AgentContext } from '../useLocalAgent';
 
 export default {
-  title: 'G2 Trivia'
+  title: 'Live Trivia (With Server)'
 };
 
 // Enables the Actions pane in storybook to show the sum of all agent's activities

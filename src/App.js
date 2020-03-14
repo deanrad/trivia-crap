@@ -64,10 +64,10 @@ function useStore({ authStates, route }) {
     // Certain eventbus events go outbound
     const publishedEvents = ['auth/login'];
     // Add in some fields on the fly for published events
-    filter(publishedEvents, ({ payload }) => {
+    const agentStamping = filter(publishedEvents, ({ payload }) => {
       payload.agentId = agentId;
     });
-    on(publishedEvents, ({ type, payload }) => {
+    const socketSending = on(publishedEvents, ({ type, payload }) => {
       socket.emit('event', { type, payload });
     });
 
@@ -77,6 +77,12 @@ function useStore({ authStates, route }) {
     // Debugging
     spy(({ type, payload }) => console.log(type, payload));
     Object.assign(window, { socket, store });
+
+    return () => {
+      agentStamping.unsubscribe();
+      socketSending.unsubscribe();
+      socket.close();
+    };
   });
 
   return store;
@@ -99,7 +105,7 @@ function useAuth({ authStates, store, trigger }) {
   });
 
   // When we hear of another user joining, we add them to our store
-  useListener('state/users/add', ({ payload: { user, photo } }) => {
+  useListener('game/users/add', ({ payload: { user, photo } }) => {
     store.users.push({ user, photo });
   });
 }

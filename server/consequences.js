@@ -3,12 +3,25 @@ import { Subject } from 'rxjs';
 import { persistGame } from './persistence';
 
 /// Store (TODO restore from db upon awakening)
-export const store = {
+const store = {
   users: {}
 };
+
 // Record a user when Oauth completes
-filter('auth/login', (_, { user, displayName, photo }) => {
-  store.users[user] = { user, displayName, photo };
+filter('auth/login', ({ payload }) => {
+  const {
+    user,
+    agentId,
+    displayName,
+    photo = `https://github.com/identicons/${user}.png`
+  } = payload;
+  store.users[user] = {
+    user,
+    agentId,
+    displayName,
+    photo,
+    joinedAt: Date.now()
+  };
 });
 
 /////  WebSockets
@@ -19,13 +32,10 @@ export const outbound = new Subject();
 const publishTriggers = () => true;
 const persistTriggers = () => true;
 
-on(
-  publishTriggers,
-  (_, { user, photo = `https://github.com/identicons/${user}.png` }) => {
-    user &&
-      outbound.next({ type: 'state/users/add', payload: { user, photo } });
-  }
-);
+on(publishTriggers, ({ payload }) => {
+  const { user, photo = `https://github.com/identicons/${user}.png` } = payload;
+  user && outbound.next({ type: 'game/users/add', payload: { user, photo } });
+});
 
 on(
   persistTriggers,

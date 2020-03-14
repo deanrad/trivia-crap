@@ -1,5 +1,5 @@
 import { randomId, trigger } from 'polyrhythm';
-import { outbound } from './consequences'
+import { outbound } from './consequences';
 
 export const handleSocketConnection = client => {
   const clientId = client.id.substr(0, 6);
@@ -15,7 +15,7 @@ export const handleSocketConnection = client => {
 
   client.on('event', ({ type, payload }) => {
     const agentId = payload.agentId || clientId;
-    console.log(`${agentId}: ${type} ${JSON.stringify(payload)}`);
+    console.log(`${clientId}(${agentId}): ${type} ${JSON.stringify(payload)}`);
     trigger(type, payload);
   });
 
