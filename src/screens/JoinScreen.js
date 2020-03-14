@@ -1,7 +1,7 @@
 import React from 'react';
 import { trigger } from 'polyrhythm';
 import { Notyf } from 'notyf';
-import { useListener } from '../useLocalAgent';
+import { useListener } from '../useChannel';
 
 import 'notyf/notyf.min.css';
 const notyf = new Notyf();

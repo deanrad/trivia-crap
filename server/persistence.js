@@ -9,7 +9,13 @@ const dbConnected = new Promise((resolve, reject) => {
     resolve(db);
   });
   db.on('error', e => reject(e));
-  mongoose.connect(mongoUri);
+  mongoose
+    .connect(mongoUri, {
+      socketTimeoutMS: 2000,
+      keepAlive: true,
+      reconnectTries: 2
+    })
+    .catch(reject);
 });
 
 const schema = new mongoose.Schema({}, { strict: false });

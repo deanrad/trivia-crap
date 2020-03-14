@@ -8,7 +8,7 @@ import { simulatedGithubAuth } from './auth/fixtures';
 import { setInitialRoute, Home, Live, Remote } from './routes';
 import { storeModel } from './store/index';
 import { useEffectAtMount } from 'polyrhythm';
-import { useLocalAgent, useListener } from './useLocalAgent';
+import { useChannel, useListener } from './useChannel';
 import { useLocalStore, useObserver } from 'mobx-react-lite';
 
 import io from 'socket.io-client';
@@ -46,7 +46,7 @@ function App({ authStates = authCookieStates, route }) {
 function useStore({ authStates, route }) {
   const store = useLocalStore(storeModel);
 
-  const { on, filter, spy, trigger, agentId } = useLocalAgent();
+  const { on, filter, spy, trigger, agentId } = useChannel();
 
   useAuth({ authStates, store, trigger });
 

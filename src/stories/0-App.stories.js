@@ -2,7 +2,7 @@ import React from 'react';
 import App from '../App';
 import { player1CookieStates, player2CookieStates } from '../auth/fixtures';
 import { agent, Agent } from 'polyrhythm';
-import { AgentContext } from '../useLocalAgent';
+import { AgentContext } from '../useChannel';
 
 export default {
   title: 'Live Trivia (With Server)'
