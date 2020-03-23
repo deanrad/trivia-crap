@@ -37,7 +37,7 @@ function App({ authStates = authCookieStates, route }) {
           />
         )}
         {store.route === Live && (
-          <LiveScreen usernames={store.usernames} users={store.users} />
+          <LiveScreen game={store.game} usernames={store.usernames} users={store.users} />
         )}
         {store.route === Remote && <RemoteScreen />}
       </div>
@@ -104,6 +104,12 @@ function useAuth({ authStates, store, trigger }) {
   // When we get this event (and we trust it), record our username in the store
   useListener('auth/login', ({ payload: { user } }) => {
     store.setUsername(user);
+  });
+
+  useListener('game/update', ({ payload: game }) => {
+    for (let key of Object.keys(game)) {
+      store[key] = game[key];
+    }
   });
 
   // When we hear of another user joining, we add them to our store

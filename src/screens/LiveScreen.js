@@ -1,10 +1,11 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-export const LiveScreen = observer(({ usernames, users }) => {
+export const LiveScreen = observer(({ game, usernames, users }) => {
   return (
     <div>
       <h1>Live Game</h1>
+      <h2>{game.title} </h2>
       <h3>{usernames.length} users online</h3>
 
       <div>

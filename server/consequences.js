@@ -41,7 +41,15 @@ persistedGame.then(game => {
       user,
       photo = `https://github.com/identicons/${user}.png`
     } = payload;
+
     user && outbound.next({ type: 'game/users/add', payload: { user, photo } });
+    outbound.next({
+      type: 'game/update',
+      payload: {
+        questions: gameState.questions,
+        game: gameState.game
+      }
+    });
   });
 
   on(
