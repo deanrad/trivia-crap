@@ -1,27 +1,24 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-export const LiveScreen = observer(({ users }) => {
+export const LiveScreen = observer(({ usernames, users }) => {
   return (
     <div>
       <h1>Live Game</h1>
-      <h3>{users.length} users online</h3>
+      <h3>{usernames.length} users online</h3>
 
-      <ul>
-        {users.map(user => (
-          <li key={user.user}>
-            <User {...user} />
-          </li>
+      <div>
+        {usernames.map((user, idx) => (
+          <span key={idx}>
+            <User {...users[user]} />
+          </span>
         ))}
-      </ul>
+      </div>
     </div>
   );
 });
 
 const UserSize = 20;
 const User = ({ user, photo }) => (
-  <span>
-    <img alt={user} src={photo} height={UserSize} className="user-icon"></img>
-    {user}
-  </span>
+  <img alt={user} src={photo} height={UserSize} className="user-icon" />
 );

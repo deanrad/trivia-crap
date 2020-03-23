@@ -36,7 +36,9 @@ function App({ authStates = authCookieStates, route }) {
             loggedInUser={store.username}
           />
         )}
-        {store.route === Live && <LiveScreen users={store.users} />}
+        {store.route === Live && (
+          <LiveScreen usernames={store.usernames} users={store.users} />
+        )}
         {store.route === Remote && <RemoteScreen />}
       </div>
     );
@@ -106,7 +108,7 @@ function useAuth({ authStates, store, trigger }) {
 
   // When we hear of another user joining, we add them to our store
   useListener('game/users/add', ({ payload: { user, photo } }) => {
-    store.users.push({ user, photo });
+    store.users[user] = { user, photo };
   });
 }
 export default App;

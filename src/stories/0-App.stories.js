@@ -13,6 +13,7 @@ const storybookAgent = agent;
 const player1Agent = new Agent({ agentId: 'P1' });
 const player2Agent = new Agent({ agentId: 'P2' });
 const liveAgent = new Agent({ agentId: 'L1' });
+const remoteAgent = new Agent({ agentId: 'R1' });
 
 player1Agent.on(true, ({ type, payload }) =>
   storybookAgent.trigger('P1:' + type, payload)
@@ -29,6 +30,9 @@ export const MultiPlayer = () => (
   <>
     <AgentContext.Provider value={liveAgent}>
       <App route="/live" />
+    </AgentContext.Provider>
+    <AgentContext.Provider value={remoteAgent}>
+      <App route="/remote" />
     </AgentContext.Provider>
     <AgentContext.Provider value={player1Agent}>
       <App authStates={player1CookieStates} />

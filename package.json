@@ -39,7 +39,7 @@
     "storybook": "start-storybook -p 8470 -s public",
     "build-storybook": "build-storybook -s public",
     "server": "nodemon -r esm server.js",
-    "dev": "concurrently 'react-scripts start' 'npm run server'",
+    "dev": "MONGODB_URI=mongodb://g2-trivia:m0ntyr0x@ds021989.mlab.com:21989/g2-trivia concurrently 'react-scripts start' 'npm run server'",
     "deploy": "git push -f g2-trivia master && open http://g2-trivia.herokuapp.com/; heroku logs -t",
     "github:settings": "open https://github.com/settings/applications/221258",
     "heroku:settings": "open https://dashboard.heroku.com/apps/g2-trivia",
@@ -62,11 +62,12 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^5.3.13",
-    "@storybook/addon-links": "^5.3.13",
-    "@storybook/addons": "^5.3.13",
+    "@storybook/addon-actions": "=5.2.8",
+    "@storybook/addon-links": "=5.2.8",
+    "@storybook/addon-viewport": "=5.2.8",
+    "@storybook/addons": "=5.2.8",
     "@storybook/preset-create-react-app": "^1.5.2",
-    "@storybook/react": "^5.3.13",
+    "@storybook/react": "=5.2.8",
     "nodemon": "^2.0.2"
   }
 }

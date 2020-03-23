@@ -9,5 +9,8 @@ export const storeModel = () => ({
   setUsername(username) {
     this.username = username;
   },
-  users: []
+  users: {},
+  get usernames() {
+    return Object.keys(this.users);
+  }
 });
