@@ -11,7 +11,7 @@
     "concurrently": "^5.1.0",
     "cookie-parser": "^1.4.4",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "mobx": "^5.15.4",
     "mobx-react-lite": "^1.5.2",
     "mongoose": "^5.9.4",
